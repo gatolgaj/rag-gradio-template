@@ -1,0 +1,7 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: rag-gradio-template
+spec:
+  type: url
+  target: 'https://github.com/gatolgaj/rag-gradio-template/templates/rag-gradio-template/catalog-info.yaml'

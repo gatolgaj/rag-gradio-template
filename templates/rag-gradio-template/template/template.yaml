@@ -1,0 +1,52 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: rag-gradio-app
+  title: RAG Application with Gradio
+  description: A template for creating a Retrieval-Augmented Generation (RAG) application using LangChain, Qdrant, OpenAI, and Gradio.
+  tags:
+    - rag
+    - langchain
+    - qdrant
+    - openai
+    - gradio
+spec:
+  owner: team-a
+  type: service
+  parameters:
+    - title: Name
+      description: The name of the application
+      type: string
+      required: true
+    - title: Description
+      description: A short description of the application
+      type: string
+  steps:
+    - id: fetch
+      name: Fetch Skeleton
+      action: fetch:template
+      input:
+        url: 'https://github.com/gatolgaj/rag-gradio-template'
+        targetPath: '.'
+    - id: template
+      name: Template Skeleton
+      action: templating:template
+      input:
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+    - id: install-dependencies
+      name: Install Dependencies
+      action: shell:script
+      input:
+        script: |
+          cd backend
+          pip install -r requirements.txt
+          cd ../frontend
+          pip install -r requirements.txt
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        repoUrl: 'github.com?repo=${{ parameters.name }}&owner=my-org&private=false'
+        description: 'Publishing the repository'
