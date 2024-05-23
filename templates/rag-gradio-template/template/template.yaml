@@ -42,15 +42,6 @@ spec:
         values:
           name: ${{ parameters.name }}
           description: ${{ parameters.description }}
-    - id: install-dependencies
-      name: Install Dependencies
-      action: shell:script
-      input:
-        script: |
-          cd backend
-          pip install -r requirements.txt
-          cd ../frontend
-          pip install -r requirements.txt
     - id: publish
       name: Publish
       action: publish:github
