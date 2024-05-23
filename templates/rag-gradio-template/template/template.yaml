@@ -4,35 +4,41 @@ metadata:
   name: rag-gradio-app
   title: RAG Application with Gradio
   description: A template for creating a Retrieval-Augmented Generation (RAG) application using LangChain, Qdrant, OpenAI, and Gradio.
-  tags:
-    - rag
-    - langchain
-    - qdrant
-    - openai
-    - gradio
 spec:
-  owner: team-a
+  owner: user:guest
   type: service
   parameters:
-    - title: Name
-      description: The name of the application
-      type: string
-      required: true
-    - title: Description
-      description: A short description of the application
-      type: string
-      required: false
+    - title: Fill in some details
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+          ui:autofocus: true
+        description:
+          title: Description
+          type: string
+          description: A short description of the application
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
   steps:
     - id: fetch
       name: Fetch Skeleton
       action: fetch:template
       input:
-        url: 'https://github.com/your-org/rag-gradio-template'
-        targetPath: '.'
-    - id: template
-      name: Template Skeleton
-      action: templating:template
-      input:
+        url: 'https://github.com/gatolgaj/rag-gradio-template'
         values:
           name: ${{ parameters.name }}
           description: ${{ parameters.description }}
@@ -49,5 +55,19 @@ spec:
       name: Publish
       action: publish:github
       input:
-        repoUrl: 'github.com?repo=${{ parameters.name }}&owner=my-org&private=false'
-        description: 'Publishing the repository'
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
