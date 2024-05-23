@@ -21,12 +21,13 @@ spec:
     - title: Description
       description: A short description of the application
       type: string
+      required: false
   steps:
     - id: fetch
       name: Fetch Skeleton
       action: fetch:template
       input:
-        url: 'https://github.com/gatolgaj/rag-gradio-template'
+        url: 'https://github.com/your-org/rag-gradio-template'
         targetPath: '.'
     - id: template
       name: Template Skeleton
